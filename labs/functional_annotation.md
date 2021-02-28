@@ -62,12 +62,11 @@ Launch Interproscan with the option -h if you want have a look about all the par
 module load InterProScan
 interproscan.sh -i maker_final.faa -t p -dp -pa -appl Pfam,ProDom-2006.1,SuperFamily-1.75 --goterms --iprlookup
 ```
-This analyse will fail.  
+This analysis will fail.  
 
 :question:Why? What is the error message displaying?  
 
-If you did not have a look at the maker_final.faa, please have look and find a solution to
-make interproscan run.  
+If you did not have a look at the maker_final.faa, please have a look and find a solution to make interproscan run.  
 
 :bulb:***TIP*** : ```gff3_sp_extract_sequences.pl --help```  
 
@@ -79,7 +78,7 @@ Interproscan is really selective on the fasta input data, there should not be an
 You need to rerun the first script with the parameters --cfs and --cis:  
 <br>
 <code>
-gff3_sp_extract_sequences.pl maker_abinitio_cplt_by_evidence.gff -f genome.fa -p -o maker_final_fixed.faa --cfs --cis
+agat_sp_extract_sequences.pl maker_abinitio_cplt_by_evidence.gff -f genome.fa -p -o maker_final_fixed.faa --cfs --cis
 </code>  
 <br>
 or you can do  
