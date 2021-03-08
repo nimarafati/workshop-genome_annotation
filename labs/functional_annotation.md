@@ -68,7 +68,7 @@ This analysis will fail.
 
 If you did not have a look at the maker_final.faa, please have a look and find a solution to make interproscan run.  
 
-:bulb:***TIP*** : ```gff3_sp_extract_sequences.pl --help```  
+:bulb:***TIP*** : ```agat_sp_extract_sequences.pl  --help```  
 
 <details>
 <summary> :key:**Interproscan problem** - Click to expand the solution </summary>
@@ -78,7 +78,7 @@ Interproscan is really selective on the fasta input data, there should not be an
 You need to rerun the first script with the parameters --cfs and --cis:  
 <br>
 <code>
-agat_sp_extract_sequences.pl maker_abinitio_cplt_by_evidence.gff -f genome.fa -p -o maker_final_fixed.faa --cfs --cis
+agat_sp_extract_sequences.pl -g maker_abinitio_cplt_by_evidence.gff -f genome.fa -p -o maker_final_fixed.faa --cfs --cis
 </code>  
 <br>
 or you can do  
@@ -100,7 +100,7 @@ Next, you could write scripts of your own to merge interproscan output into your
 We also created a script that can do the merging between the structural annotation and the interpro results :
 
 ```
-gff3_sp_manage_functional_annotation.pl --gff maker_final.gff -i maker_final.faa.tsv -o  maker_final.interpro
+agat_sp_manage_functional_annotation.pl --gff maker_final.gff -i maker_final.faa.tsv -o  maker_final.interpro
 ```
 Where a match is found, the new file will now include features called Dbxref and/or Ontology_term in the gene and transcript feature field (9th column).
 The improved annotation is the gff file inside the maker_final.interpro folder.
@@ -116,15 +116,15 @@ To run Blast on your data, use the Ncbi Blast+ package against a Drosophila-spec
 module load blast/2.7.1+
 blastp -db $data/blastdb/uniprot_dmel/uniprot_dmel.fa -query maker_final.faa -outfmt 6 -out blast.out -num_threads 8
 ```
-Against the Drosophila-specific database, the blast search takes about 2 secs per protein request - depending on how many sequences you have submitted, you can make a fairly deducted guess regarding the running time.
+Against the Drosophila-specific database, the blast search takes about 2 secs per protein request - depending on how many sequences you have submitted, you can make a fairly educated guess regarding the running time.
 
 ### load the retrieved information in your annotation file:  
 
 Now you should be able to use the following script:
 ```
-gff3_sp_manage_functional_annotation.pl -f maker_final.interpro/maker_final.gff -b blast.out --db $data/blastdb/uniprot_dmel/uniprot_dmel.fa -o maker_final.interpro.blast  
+agat_sp_manage_functional_annotation.pl -f maker_final.interpro/maker_final.gff -b blast.out --db $data/blastdb/uniprot_dmel/uniprot_dmel.fa -o maker_final.interpro.blast  
 ```
-That will add the name attribute to the "gene" feature and the description attribute (corresponding to the product information) to the "mRNA" feature into you annotation file.
+That will add the name attribute to the "gene" feature and the description attribute (corresponding to the product information) to the "mRNA" feature into your annotation file.
 The improved annotation is the gff file inside the maker_final.interpro.blast folder.
 
 :question:How many genes do not have any names?
@@ -135,14 +135,14 @@ For instance, you can do this to count genes with names :
 <code> grep -P "\tgene" maker_final.interpro.blast/maker_final.gff | grep -v "Name" | wc -l</code>
 </details>
 
-:mortar_board: Choose one gene in your gff file with annotation with at least one GO terms (they look like GO:XXXX) and some domains annotated and have a look a them in the [Gene Ontology webpage](http://www.geneontology.org/) and [Interproscan webpage](http://www.ebi.ac.uk/interpro/).
+:mortar_board: Choose one gene in your gff file with annotation with at least one GO terms (they look like GO:XXXX) and some domains annotated and have a look at them in the [Gene Ontology webpage](http://www.geneontology.org/) and [Interproscan webpage](http://www.ebi.ac.uk/interpro/).
 
 
 ### Set nice IDs
 
 The purpose is to modify the ID value by something more convenient (i.e FLYG00000001 instead of maker-4-exonerate_protein2genome-gene-8.41).  
 ```
-gff3_sp_manage_functional_annotation.pl -f maker_final.interpro.blast/maker_final.gff --ID FLY -o maker_final.interpro.blast.ID  
+agat_sp_manage_functional_annotation.pl -f maker_final.interpro.blast/maker_final.gff -id FLY -o maker_final.interpro.blast.ID  
 ```
 The improved annotation is the gff file inside the maker_final.interpro.blast.ID folder.
 
@@ -151,7 +151,7 @@ The improved annotation is the gff file inside the maker_final.interpro.blast.ID
 For a nice display of a gff file within Webapollo some modification might be needed.
 As example the attribute ***product*** is not displayed in Webapollo, whereas renaming it ***description*** will work out.
 ```
-~/git/GAAS/annotation/WebApollo/gff3_sp_webApollo_compliant.pl -gff maker_final.interpro.blast.ID/maker_final.gff -o final_annotation.gff
+agat_sp_webApollo_compliant.pl -gff maker_final.interpro.blast.ID/maker_final.gff -o final_annotation.gff
 ```
 
 ## Visualise the final annotation
@@ -161,7 +161,7 @@ Transfer the final_annotation.gff file to your computer using scp in a new termi
 scp __YOURLOGIN__@rackham.uppmax.uu.se:/proj/g2019006/nobackup/__YOURLOGIN__/functional_annotation/final_annotation.gff .
 ```
 
-Load the file in into the genome portal called drosophila_melanogaster_chr4 in the Webapollo genome browser available at the address [http://annotation-prod.scilifelab.se:8080/NBIS_course/](http://annotation-prod.scilifelab.se:8080/NBIS_course/). [Here find the WebApollo instruction](labs/webapollo_usage.md)
+Load the file into the genome portal called drosophila_melanogaster_chr4 in the Webapollo genome browser available at the address [http://annotation-prod.scilifelab.se:8080/NBIS_course/](http://annotation-prod.scilifelab.se:8080/NBIS_course/). [Here find the WebApollo instruction](labs/webapollo_usage.md)
 
 Wonderfull ! isn't it ?
 
