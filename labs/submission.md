@@ -25,11 +25,8 @@ ln -s $structural_annotation_path/maker/complement/maker_abinitio_cplt_by_eviden
 
 ```
 
-Then you need to download and install EMBLmyGFF3 :
-```bash
-pip install --user git+https://github.com/NBISweden/EMBLmyGFF3.git
-~/.local/bin/EMBLmyGFF3 maker_final_short_intron_flagged_duplicated_location_fixed.gff genome.fa -o my_annotation_ready_to_submit.embl
-```
+(?!?!?!?! in VM)? Then you need to download and install EMBLmyGFF3 :
+You can read about the installation [here](https://github.com/NBISweden/EMBLmyGFF3#installation)
 
 <u>**Setup:**</u> For this exercise you need to be logged in to Uppmax. Follow the [UPPMAX login instructions](uppmax_login).
 
