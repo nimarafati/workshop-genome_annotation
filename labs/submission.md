@@ -10,7 +10,6 @@ objectives:
 ---
 
 # Prerequisites
-For this exercise you need to be logged in to Uppmax.
 
 Setup the folder structure:
 
@@ -26,33 +25,35 @@ ln -s $structural_annotation_path/maker/complement/maker_abinitio_cplt_by_eviden
 
 ```
 
+Then you need to download and install EMBLmyGFF3 :
+```bash
+pip install --user git+https://github.com/NBISweden/EMBLmyGFF3.git
+~/.local/bin/EMBLmyGFF3 maker_final_short_intron_flagged_duplicated_location_fixed.gff genome.fa -o my_annotation_ready_to_submit.embl
+```
+
 <u>**Setup:**</u> For this exercise you need to be logged in to Uppmax. Follow the [UPPMAX login instructions](uppmax_login).
 
 # Submission to public repository (creation of an EMBL file)
 
-Once your are satisfied by the wonderful annotation you have done, it would useful important to submit it to a public repostiroy. Fisrt you will be applaused by the community because you share your nice work, secondly this is often mandatory if you wish to publish some work related to this annotation.
+Once your are satisfied by the wonderful annotation you have done, it would important to submit it to a public repostiroy. Fisrtly, you will be applauded by the community because you share your nice work. Secondly, this is often mandatory if you wish to publish some work related to this annotation.
 
 Current state-of-the-art genome annotation tools use the GFF3 format as output, while this format is not accepted as submission format by the International Nucleotide Sequence Database Collaboration (INSDC) databases. Converting the GFF3 format to a format accepted by one of the three INSDC databases is a key step in the achievement of genome annotation projects. However, the flexibility existing in the GFF3 format makes this conversion task difficult to perform.
 
-In order to submit to **NCBI**, the use of a tool like [GAG](https://genomeannotation.github.io/GAG/) will save you lot time.  
-In order to submit to **EBI**, the use of a tool like [EMBLmyGFF3](https://github.com/NBISweden/EMBLmyGFF3) will be your best choice.
+In order to submit to **NCBI**, using a tool like [GAG](https://genomeannotation.github.io/GAG/) will save you a lot of time.  
+In order to submit to **EBI**, using a tool like [EMBLmyGFF3](https://github.com/NBISweden/EMBLmyGFF3) will be your best choice.
 
 **Let's prepare your annotation to submit to ENA (EBI)**
 
-In real life, prior to a submission to ENA, you need to create an account and create a project asking a locus_tag for your annotation. You have also to fill lot of metada information related to the assembly and so on. We will skip those tasks using fake information.
+In real life, prior to a submission to ENA, you need to create an account and create a project asking a locus_tag for your annotation. You have also to fill a lot of metada information related to the assembly and so on. We will skip those tasks using fake information.
 
-First you need to filter and add extra information to your file otherwise submission might fail:
+# Data preparation for submission to ENA (EBI) 
+First you need polish your annotation to filter or flag suprious cases (e.g short intron < 10 bp) otherwise the submission might fail :  
 ```bash
-gff3_sp_flag_short_introns.pl --gff maker_final.gff -o maker_final_short_intron_flagged.gff
-gff3_sp_fix_features_locations_duplicated.pl --gff -o maker_final_short_intron_flagged_duplicated_location_fixed.gff
+agat_sp_flag_short_introns.pl --gff maker_final.gff -o maker_final_short_intron_flagged.gff
+agat_sp_fix_features_locations_duplicated.pl --gff -o maker_final_short_intron_flagged_duplicated_location_fixed.gff
 ```
 
-Then you need to download and install EMBLmyGFF3:
-```bash
-module load python/2.7.6
-pip install --user git+https://github.com/NBISweden/EMBLmyGFF3.git
-~/.local/bin/EMBLmyGFF3 maker_final_short_intron_flagged_duplicated_location_fixed.gff genome.fa -o my_annotation_ready_to_submit.embl
-```
+
 
 Before to try to submit your file, you must check that everything is fine with the official embl-api-validator. You can find it at the [ena repository](https://github.com/enasequence/sequencetools). Download the validator and validate your file.
 ```bash
