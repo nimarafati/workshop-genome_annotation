@@ -16,10 +16,10 @@ For this exercise you need to be logged in to Uppmax.
 Setup the folder structure:
 
 ```bash
-source ~/git/GAAS/profiles/activate_rackham_env
-export data=/proj/g2019006/nobackup/$USER/data
-export functional_annotation_path=/proj/g2019006/nobackup/$USER/functional_annotation
-export structural_annotation_path=/proj/g2019006/nobackup/$USER/structural_annotation
+conda activate bioinfo
+export data=/home/data/data_annotation/
+export functional_annotation_path=/home/$USER/functional_annotation
+export structural_annotation_path=/home/$USER/structural_annotation
 mkdir -p $functional_annotation_path
 chmod +w $data/blastdb/uniprot_dmel/
 ```
@@ -59,7 +59,6 @@ Launch Interproscan with the option -h if you want have a look about all the par
 <br> - If you enable the InterPro lookup ('-iprlookup'), you can also get the InterPro identifier corresponding to each motif retrieved: for example, the same motif is known as PF01623 in Pfam and as IPR002568 in InterPro.
 <br> - The option '-pa' provides mappings from matches to pathway information (MetaCyc,UniPathway,KEGG,Reactome).
 ```
-module load InterProScan
 interproscan.sh -i maker_final.faa -t p -dp -pa -appl Pfam,ProDom-2006.1,SuperFamily-1.75 --goterms --iprlookup
 ```
 This analysis will fail.  
@@ -71,13 +70,14 @@ If you did not have a look at the maker_final.faa, please have a look and find a
 :bulb:***TIP*** : ```agat_sp_extract_sequences.pl  --help```  
 
 <details>
-<summary> :key:**Interproscan problem** - Click to expand the solution </summary>
+<summary> :key: **Interproscan problem** - Click to expand the solution </summary>
 
 Interproscan is really selective on the fasta input data, there should not be any stop codon * or any character other than ATCG (except in the header of course)  
 
 You need to rerun the first script with the parameters --cfs and --cis:  
 <br>
 <code>
+conda activate agat
 agat_sp_extract_sequences.pl -g maker_abinitio_cplt_by_evidence.gff -f genome.fa -p -o maker_final_fixed.faa --cfs --cis
 </code>  
 <br>
