@@ -106,22 +106,32 @@ Where a match is found, the new file will now include features called Dbxref and
 The improved annotation is the gff file inside the maker_final.interpro folder.
 
 ## BLAST approach
-Blast searches provide an indication about potential homology to known proteins.
-A 'full' Blast analysis can run for several days and consume several GB of Ram. Consequently, for a huge amount of data it is recommended to parallelize this step doing analysis of chunks of tens or hundreds proteins. This approach can be used to give a name to the genes and a function to the transcripts.
+Blast searches provide an indication about potential homology to known proteins. This approach can be used to give a name to the genes and a function to the transcripts. A 'full' Blast analysis can take several days and consume several GB of Ram. Consequently, for big data‚ it is recommended to parallelize this step by doing in chunks of tens or hundreds proteins. 
 
 ### Perform Blast searches from the command line on Uppmax:
 
 To run Blast on your data, use the Ncbi Blast+ package against a Drosophila-specific database (included in the folder we have provided for you, under **$data/blastdb/uniprot\_dmel/uniprot\_dmel.fa**) - of course, any other NCBI database would also work:
 ```
-module load blast/2.7.1+
+conda activate blast
+cd $functional_annotation_path
 blastp -db $data/blastdb/uniprot_dmel/uniprot_dmel.fa -query maker_final.faa -outfmt 6 -out blast.out -num_threads 8
 ```
+if you received the following error:  
+_BLAST Database error: No alias or index file found for protein database [/blastdb/uniprot_dmel/uniprot_dmel.fa] in search path [/home/nima_rafati/functional_annotation::]_
+
+then create the database again, it is due to new formating implemented in blast.  
+```
+cd $data/blastb/uniprot_dmel
+makeblastdb -in uniprot_dmel.fa -dbtype prot -out uniprot_dmel.fa
+```
+
 Against the Drosophila-specific database, the blast search takes about 2 secs per protein request - depending on how many sequences you have submitted, you can make a fairly educated guess regarding the running time.
 
 ### load the retrieved information in your annotation file:  
 
 Now you should be able to use the following script:
 ```
+conda activate agat
 agat_sp_manage_functional_annotation.pl -f maker_final.interpro/maker_final.gff -b blast.out --db $data/blastdb/uniprot_dmel/uniprot_dmel.fa -o maker_final.interpro.blast  
 ```
 That will add the name attribute to the "gene" feature and the description attribute (corresponding to the product information) to the "mRNA" feature into your annotation file.
@@ -149,7 +159,7 @@ The improved annotation is the gff file inside the maker_final.interpro.blast.ID
 ### Polish your file for a nice display within Webapollo
 
 For a nice display of a gff file within Webapollo some modification might be needed.
-As example the attribute ***product*** is not displayed in Webapollo, whereas renaming it ***description*** will work out.
+As example the attribute ***product*** is not displayed in Webapollo, whereas renaming it to ***description*** will work out.
 ```
 agat_sp_webApollo_compliant.pl -gff maker_final.interpro.blast.ID/maker_final.gff -o final_annotation.gff
 ```
@@ -158,10 +168,10 @@ agat_sp_webApollo_compliant.pl -gff maker_final.interpro.blast.ID/maker_final.gf
 
 Transfer the final_annotation.gff file to your computer using scp in a new terminal:
 ```
-scp __YOURLOGIN__@rackham.uppmax.uu.se:/proj/g2019006/nobackup/__YOURLOGIN__/functional_annotation/final_annotation.gff .
+scp -P 65022 __USER__@hpc.mf.uni-lj.si:/home/USER/functional_annotation/final_annotation.gff .
 ```
 
-Load the file into the genome portal called drosophila_melanogaster_chr4 in the Webapollo genome browser available at the address [http://annotation-prod.scilifelab.se:8080/NBIS_course/](http://annotation-prod.scilifelab.se:8080/NBIS_course/). [Here find the WebApollo instruction](labs/webapollo_usage.md)
+Load the file into the genome portal called drosophila_melanogaster_chr4 in the Webapollo genome browser available at the address [https://webapollo.nbis.se/elixirannotation2021/annotator/index](https://webapollo.nbis.se/elixirannotation2021/annotator/index). [Here find the WebApollo instruction](https://nbisweden.github.io/workshop-genome_annotation_elixir/labs/webapollo_usage)
 
 Wonderfull ! isn't it ?
 
