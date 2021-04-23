@@ -42,7 +42,7 @@ For this exercise, we have set up a specific [Webapollo](http://annotation-prod.
 The tracks available are:  
 
 - Augustus_drosophila : a pure ab initio annotation using Augustus with the drosophila model.
-- Maker\_evidence : A maker annotation using Evidence-based approach.
+- Maker\_evidence : A maker annotation using Evidence-based approach. This track is loaded as user track on top.
 - Maker\_abinitio : A maker annotation using Ab initio evidence-drived approach.  
 - Proteins : track of reviewed proteins aligned by Maker.
 - tophat_larva4 : RNAseq data (bam file) aligned to the genome by tophat.  
